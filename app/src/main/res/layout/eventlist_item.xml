@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/eventSection"
+        android:text="@string/section"
+        style="@style/section" />
+
+    <TextView
+        android:id="@+id/title"
+        app:fontFamily="sans-serif"
+        tools:text="@string/demoTitle"
+        style="@style/title" />
+
+    <TextView
+        android:id="@+id/eventPubDate"
+        android:text="@string/demoDate"
+        style="@style/pubDate" />
+
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/padding8"
+        android:paddingBottom="@dimen/padding8">
+
+        <TextView
+            android:id="@+id/eventAuthor"
+            tools:text="@string/demoAuthor"
+            style="@style/author" />
+
+        <TextView
+            android:id="@+id/eventType"
+            tools:text="@string/demoType"
+            style="@style/type" />
+
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">NewsApp</string>
+    <string name="action_settings">Settings</string>
+    <string name="section">Section</string>
+    <string name="demoTitle">Florida woman dies from flesheating bacteria after visiting popular Manatee County beach - ABC Action News</string>
+    <string name="demoDate">September 19, 2019</string>
+    <string name="demoAuthor">David Montanaro</string>
+    <string name="demoType">liveblog</string>
+</resources>

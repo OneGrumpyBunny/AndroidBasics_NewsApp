@@ -1,0 +1,10 @@
+<resources>
+    <dimen name="padding0">0dp</dimen>
+    <dimen name="padding12">12dp</dimen>
+    <dimen name="padding50">50dp</dimen>
+    <dimen name="text20">20sp</dimen>
+    <dimen name="padding8">8dp</dimen>
+    <dimen name="padding24">24dp</dimen>
+    <dimen name="text16">16sp</dimen>
+    <dimen name="text12">12sp</dimen>
+</resources>
