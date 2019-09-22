@@ -6,4 +6,5 @@
     <string name="demoDate">September 19, 2019</string>
     <string name="demoAuthor">David Montanaro</string>
     <string name="demoType">liveblog</string>
+    <string name="noConnection">No Internet Connection</string>
 </resources>

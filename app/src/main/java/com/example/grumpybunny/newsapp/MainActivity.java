@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements androidx.loader.a
     private static final String API_KEY = BuildConfig.ApiKey;
     String restartLoader;
     String initLoader;
+    private TextView emptyText;
 
     // use ButterKnife to bind the recycler view
     @BindView(R.id.recyclerview)
@@ -48,7 +51,13 @@ public class MainActivity extends AppCompatActivity implements androidx.loader.a
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        // set initial value of empty text field
+        emptyText = findViewById(R.id.emptyText);
+        emptyText.setText("No news available");
+
         setUp();
+
 
         // initialize Toolbar
         Toolbar myToolbar = findViewById(R.id.toolbar);
@@ -72,10 +81,10 @@ public class MainActivity extends AppCompatActivity implements androidx.loader.a
         if (conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED
                 || conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
 
-//          emptyText.setVisibility(View.GONE);
+            // since we have connection, hide "no internet connection" TextView
+            emptyText.setVisibility(View.GONE);
             LoaderManager loaderManager = getSupportLoaderManager();
             if (loader == initLoader) {
-                //androidx.loader.app.LoaderManager.LoaderCallbacks
                 loaderManager.initLoader(1, null,  this);
             }
             if (loader == restartLoader) {
@@ -84,10 +93,19 @@ public class MainActivity extends AppCompatActivity implements androidx.loader.a
         } else if (conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED
                 || conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
             if (loader == initLoader) {
-                Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                // since we have no connection, clear the view and show "no internet connection" TextView
+                recyclerView.getRecycledViewPool().clear();
+                recyclerView.setAdapter(null);
+                emptyText.setVisibility(View.VISIBLE);
+                emptyText.setText("No Internet Connection");
+
             }
             if (loader == restartLoader) {
-                Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                // since we have no connection, clear the view and show "no internet connection" TextView
+                recyclerView.getRecycledViewPool().clear();
+                recyclerView.setAdapter(null);
+                emptyText.setVisibility(View.VISIBLE);
+                emptyText.setText("No Internet Connection");
             }
         }
     }
@@ -115,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements androidx.loader.a
 
     @Override
     public void onLoaderReset(Loader<List<Event>> loader) {
+        eventAdapter.notifyDatasetchanged();
     }
 
     @Override
