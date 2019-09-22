@@ -7,5 +7,4 @@
     <string name="demoAuthor">David Montanaro</string>
     <string name="demoType">liveblog</string>
     <string name="noConnection">No Internet Connection</string>
-    <string name="RelatedTo">Stories related to:</string>
 </resources>

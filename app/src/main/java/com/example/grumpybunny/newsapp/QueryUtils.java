@@ -131,20 +131,19 @@ public class QueryUtils {
                 if (tags.length() > 0) {
 
                     JSONObject tagsresults = tags.getJSONObject(0);
-                    if (currentResults.has("firstName")) {
+
+                    if (tagsresults.has("firstName")) {
                         authorFName = tagsresults.getString("firstName");
-                        authorFName = authorFName.substring(0, 1).toUpperCase() + authorFName.substring(1);
-                        Log.d("EventAdapter", "has firstName " + authorFName);
-                    } else {
-                        Log.d("EventAdapter", "No firstName found");
+                        if (authorLName.length() > 0) {
+                            authorFName = authorFName.substring(0, 1).toUpperCase() + authorFName.substring(1);
+                        }
                     }
 
-                    if (currentResults.has("lastName")) {
+                    if (tagsresults.has("lastName")) {
                         authorLName = tagsresults.getString("lastName");
-                        authorLName = authorLName.substring(0, 1).toUpperCase() + authorLName.substring(1);
-                        Log.d("EventAdapter", "has lastName " + authorLName);
-                    } else {
-                        Log.d("EventAdapter", "No lastName found");
+                        if (authorLName.length() > 0) {
+                            authorLName = authorLName.substring(0, 1).toUpperCase() + authorLName.substring(1);
+                        }
                     }
 
                     String author = authorFName + " " + authorLName;
@@ -158,7 +157,9 @@ public class QueryUtils {
 
                         // we only want the date portion of the time stamp.
                         // It is a String (not milliseconds) and thus we use substring to extract the date portion
-                        pubDate = pubDate.substring(0, 10);
+                        if (pubDate.length() > 0) {
+                            pubDate = pubDate.substring(0, 10);
+                        }
                     }
 
                     if (currentResults.has("sectionName")) {
@@ -177,7 +178,6 @@ public class QueryUtils {
                     events.add(event);
                 }
             }
-
 
         } catch (JSONException e) {
             Log.e("QueryUtils", "Problem parsing News JSON results", e);

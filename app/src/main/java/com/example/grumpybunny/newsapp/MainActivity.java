@@ -9,18 +9,16 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.os.BuildCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +31,10 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements androidx.loader.app.LoaderManager.LoaderCallbacks<List<Event>> {
 
     private static final String GUARDIAN_API_URL = "https://content.guardianapis.com/search?";
-    private static final String API_KEY = "022f59d8-6c7e-4a78-b922-13cf08eee7fd";
-//    private static final String API_KEY = BuildConfig.ApiKey;
+    private static final String API_KEY = BuildConfig.ApiKey;
     String restartLoader;
     String initLoader;
     private TextView emptyText;
-    String filter = "";
 
     // use ButterKnife to bind the recycler view
     @BindView(R.id.recyclerview)
@@ -49,13 +45,13 @@ public class MainActivity extends AppCompatActivity implements androidx.loader.a
 
     // initialize LayoutManager
     LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+    private String filter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
 
         // set initial value of informative text fields
         emptyText = findViewById(R.id.emptyText);
@@ -65,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements androidx.loader.a
         if (getIntent() != null) {
             Intent intent = getIntent();
             filter = intent.getStringExtra("filter");
+        } else {
+            filter = null;
         }
 
         // initialize Toolbar
@@ -72,17 +70,12 @@ public class MainActivity extends AppCompatActivity implements androidx.loader.a
         setSupportActionBar(myToolbar);
 
         // default action bar title when no topic is selected
-        Log.d("MainActivity", "filter = " + filter);
-        if (filter == null || filter == "") {
-            getSupportActionBar().setTitle("Showing: All stories");
-        } else {
+        if (filter != null && filter.length() > 0) {
             getSupportActionBar().setTitle("Topic: " + filter);
+        } else {
+            getSupportActionBar().setTitle("Showing: All stories");
         }
-
         setUp();
-
-
-
     }
     private void setUp() {
         // initialize recycler view and connect to LayoutManager
@@ -170,14 +163,10 @@ public class MainActivity extends AppCompatActivity implements androidx.loader.a
         int id = item.getItemId();
 
         // define actions of icons on toolbar
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         if (id == R.id.action_reload) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("filter", "");
-//            getSupportActionBar().setTitle("Showing: All stories");
             startActivity(intent);
         }
 
