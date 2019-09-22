@@ -99,51 +99,85 @@ public class QueryUtils {
     }
 
     private static List<Event> extractEventsFromJson(String eventsJSON) {
+        // initialize key values to empty strings in case key is not found
+        String authorFName = "";
+        String authorLName = "";
+        String title = "";
+        String pubDate = "";
+        String section = "";
+        String url = "";
+        String type = "";
+
         if (TextUtils.isEmpty(eventsJSON)) {
             return null;
         }
+
         List<Event> events = new ArrayList<>();
         try {
             JSONObject root = new JSONObject(eventsJSON);
             JSONObject response = root.optJSONObject("response");
             JSONArray results = response.getJSONArray("results");
 
+            Log.d("EventAdapter","There are " + results.length() + " results");
             // grab keys in the results array
             for (int i = 0; i < results.length(); i++) {
                 JSONObject currentResults = results.getJSONObject(i);
 
                 JSONArray tags = currentResults.getJSONArray("tags");
 
-                JSONObject tagsresults = tags.getJSONObject(0);
+                Log.d("EventAdapter", "There are " + tags.length() + " tags");
 
-                String authorFName = tagsresults.getString("firstName");
-                String authorLName = tagsresults.getString("lastName");
 
-                // some values were coming in all lowercase. This capitalizes the first letter of the author name
-                if (authorFName.length() > 0) {
-                    authorFName = authorFName.substring(0, 1).toUpperCase() + authorFName.substring(1);
+                if (tags.length() > 0) {
+
+                    JSONObject tagsresults = tags.getJSONObject(0);
+                    if (currentResults.has("firstName")) {
+                        authorFName = tagsresults.getString("firstName");
+                        authorFName = authorFName.substring(0, 1).toUpperCase() + authorFName.substring(1);
+                        Log.d("EventAdapter", "has firstName " + authorFName);
+                    } else {
+                        Log.d("EventAdapter", "No firstName found");
+                    }
+
+                    if (currentResults.has("lastName")) {
+                        authorLName = tagsresults.getString("lastName");
+                        authorLName = authorLName.substring(0, 1).toUpperCase() + authorLName.substring(1);
+                        Log.d("EventAdapter", "has lastName " + authorLName);
+                    } else {
+                        Log.d("EventAdapter", "No lastName found");
+                    }
+
+                    String author = authorFName + " " + authorLName;
+
+                    if (currentResults.has("webTitle")) {
+                        title = currentResults.getString("webTitle");
+                    }
+
+                    if (currentResults.has("webPublicationDate")) {
+                        pubDate = currentResults.getString("webPublicationDate");
+
+                        // we only want the date portion of the time stamp.
+                        // It is a String (not milliseconds) and thus we use substring to extract the date portion
+                        pubDate = pubDate.substring(0, 10);
+                    }
+
+                    if (currentResults.has("sectionName")) {
+                        section = currentResults.getString("sectionName");
+                    }
+
+                    if (currentResults.has("webUrl")) {
+                        url = currentResults.getString("webUrl");
+                    }
+
+                    if (currentResults.has("type")) {
+                        type = currentResults.getString("type");
+                    }
+
+                    Event event = new Event(title, pubDate, section, url, type, author);
+                    events.add(event);
                 }
-                if (authorLName.length() > 0) {
-                    authorLName = authorLName.substring(0, 1).toUpperCase() + authorLName.substring(1);
-                }
-                String author = authorFName + " " + authorLName;
-
-                String title = currentResults.getString("webTitle");
-
-                String pubDate = currentResults.getString("webPublicationDate");
-
-                // we only want the date portion of the time stamp.
-                // It is a String (not milliseconds, and thus we use Substring to extract the date portion
-                pubDate = pubDate.substring(0,10);
-
-                String section = currentResults.getString("sectionName");
-                String url = currentResults.getString("webUrl");
-
-                String type = currentResults.getString("type");
-
-                Event event = new Event(title, pubDate, section, url, type,  author);
-                events.add(event);
             }
+
 
         } catch (JSONException e) {
             Log.e("QueryUtils", "Problem parsing News JSON results", e);

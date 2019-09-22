@@ -1,6 +1,7 @@
 package com.example.grumpybunny.newsapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,10 +33,12 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements androidx.loader.app.LoaderManager.LoaderCallbacks<List<Event>> {
 
     private static final String GUARDIAN_API_URL = "https://content.guardianapis.com/search?";
-    private static final String API_KEY = BuildConfig.ApiKey;
+    private static final String API_KEY = "022f59d8-6c7e-4a78-b922-13cf08eee7fd";
+//    private static final String API_KEY = BuildConfig.ApiKey;
     String restartLoader;
     String initLoader;
     private TextView emptyText;
+    String filter = "";
 
     // use ButterKnife to bind the recycler view
     @BindView(R.id.recyclerview)
@@ -52,16 +56,33 @@ public class MainActivity extends AppCompatActivity implements androidx.loader.a
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        // set initial value of empty text field
+
+        // set initial value of informative text fields
         emptyText = findViewById(R.id.emptyText);
         emptyText.setText("No news available");
 
-        setUp();
-
+        // collect intent data to filter the list if selected
+        if (getIntent() != null) {
+            Intent intent = getIntent();
+            filter = intent.getStringExtra("filter");
+        }
 
         // initialize Toolbar
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+
+        // default action bar title when no topic is selected
+        Log.d("MainActivity", "filter = " + filter);
+        if (filter == null || filter == "") {
+            getSupportActionBar().setTitle("Showing: All stories");
+        } else {
+            getSupportActionBar().setTitle("Topic: " + filter);
+        }
+
+        setUp();
+
+
+
     }
     private void setUp() {
         // initialize recycler view and connect to LayoutManager
@@ -85,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements androidx.loader.a
             emptyText.setVisibility(View.GONE);
             LoaderManager loaderManager = getSupportLoaderManager();
             if (loader == initLoader) {
+
                 loaderManager.initLoader(1, null,  this);
             }
             if (loader == restartLoader) {
@@ -113,9 +135,9 @@ public class MainActivity extends AppCompatActivity implements androidx.loader.a
     public Loader<List<Event>> onCreateLoader(int i, Bundle bundle) {
         Uri baseUri = Uri.parse(GUARDIAN_API_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
-        uriBuilder.appendQueryParameter("show-tags", "contributor");
         uriBuilder.appendQueryParameter("api-key", API_KEY);
-
+        uriBuilder.appendQueryParameter("show-tags", "contributor");
+        uriBuilder.appendQueryParameter("q", filter);
         return new EventLoader(this, uriBuilder.toString());
     }
 
@@ -153,9 +175,12 @@ public class MainActivity extends AppCompatActivity implements androidx.loader.a
         }
 
         if (id == R.id.action_reload) {
-            LoaderAndConnection(initLoader);
-            eventAdapter.notifyDatasetchanged();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("filter", "");
+//            getSupportActionBar().setTitle("Showing: All stories");
+            startActivity(intent);
         }
+
         return super.onOptionsItemSelected(item);
     }
 }

@@ -12,6 +12,7 @@
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="@dimen/padding0"
+        android:layout_marginTop="90dp"
         android:layout_margin="@dimen/padding12"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

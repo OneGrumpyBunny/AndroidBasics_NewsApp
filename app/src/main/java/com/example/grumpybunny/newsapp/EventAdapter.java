@@ -3,6 +3,7 @@ package com.example.grumpybunny.newsapp;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 
 public class EventAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
@@ -67,7 +69,6 @@ public class EventAdapter extends RecyclerView.Adapter<BaseViewHolder>{
             eventSection.setText("");
             eventType.setText("");
             eventAuthor.setText("");
-//            sectionHead.setText("");
         }
 
         /**  populate the views using methods in the custom class */
@@ -88,9 +89,11 @@ public class EventAdapter extends RecyclerView.Adapter<BaseViewHolder>{
             if (event.getSection() != null) {
 
                 String sectionColor = event.getSection();
-                eventSection.setText(event.getSection());
+                String thisString = event.getSection() + " (more on this topic >)";
+                eventSection.setText(thisString);
                 String titleColor = getSectionColor(sectionColor);
                 eventSection.setBackgroundColor(Color.parseColor(titleColor));
+                openTopic(eventSection, event.getSection());
             }
 
             if (event.getType() != null) {
@@ -148,6 +151,14 @@ public class EventAdapter extends RecyclerView.Adapter<BaseViewHolder>{
                 break;
         }
         return sectionColor;
+    }
+
+        private void openTopic(TextView moreLink, String openTopic) {
+        moreLink.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), MainActivity.class);
+            intent.putExtra("filter", openTopic);
+            v.getContext().startActivity(intent);
+        });
     }
 
         /** set on click listener for title of news article.

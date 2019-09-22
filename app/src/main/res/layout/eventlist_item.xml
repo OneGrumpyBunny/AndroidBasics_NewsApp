@@ -10,7 +10,8 @@
     <TextView
         android:id="@+id/eventSection"
         android:text="@string/section"
-        style="@style/section" />
+        style="@style/section"
+        android:layout_alignParentRight="true"/>
 
     <TextView
         android:id="@+id/title"
@@ -41,4 +42,5 @@
             style="@style/type" />
 
     </RelativeLayout>
+
 </LinearLayout>
