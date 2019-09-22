@@ -16,10 +16,17 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     buildTypes {
+        debug {
+            buildConfigField 'String', "ApiKey", myApiTheGuardian
+            resValue 'string', "API_KEY", myApiTheGuardian
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField 'String', "ApiKey", myApiTheGuardian
+            resValue 'string', "API_KEY", myApiTheGuardian
         }
+
     }
     buildscript {
         repositories {

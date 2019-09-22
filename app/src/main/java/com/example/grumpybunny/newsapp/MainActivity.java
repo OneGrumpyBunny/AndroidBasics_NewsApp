@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements androidx.loader.app.LoaderManager.LoaderCallbacks<List<Event>> {
 
     private static final String GUARDIAN_API_URL = "https://content.guardianapis.com/search?";
-    private static final String API_KEY = "022f59d8-6c7e-4a78-b922-13cf08eee7fd";
+    private static final String API_KEY = BuildConfig.ApiKey;
     String restartLoader;
     String initLoader;
 
